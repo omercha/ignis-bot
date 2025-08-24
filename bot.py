@@ -4,22 +4,23 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
-# Load secrets from .env
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-DEVELOPMENT = True
+# dev toggle
+DEVELOPMENT = False
 GUILD_ID = 1207784913609302056
 
-# Minimal intents for slash commands
 intents = discord.Intents.default()
+intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Slash command /hello
+# test command /hello
 @bot.tree.command(name="hello", description="Say hi to Ignis")
 async def hello(interaction: Interaction):
     await interaction.response.send_message("👋 I’m alive and ready to study!")
 
+# bot event for when the bot is logged in and ready
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
@@ -32,5 +33,6 @@ async def on_ready():
         synced = await bot.tree.sync()
         print(f"Global commands synced: {[cmd.name for cmd in synced]}")
 
+# runs code if the file is run directly
 if __name__ == "__main__":
     bot.run(TOKEN)
