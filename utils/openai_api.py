@@ -1,5 +1,4 @@
 import os
-import openai
 from openai import AsyncOpenAI
 from dotenv import load_dotenv
 
@@ -12,10 +11,14 @@ async def ask_openai(prompt: str) -> str:
     and returns the response text.
     """
     
-    response = await client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": prompt}],
-    )
+    try:
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+        )
+        
+        answer = response.choices[0].message.content.strip()
+        return answer
     
-    answer = response.choices[0].message.content.strip()
-    return answer
+    except Exception as e:
+        return f"⚠️ OpenAI Error: {str(e)}"
