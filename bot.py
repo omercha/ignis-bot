@@ -7,10 +7,7 @@ from utils.openai_api import ask_openai
 
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-
-# dev toggle
-DEVELOPMENT = True
-GUILD_ID = 1207784913609302056
+GUILD_ID = int(os.getenv("GUILD_ID", 0))
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -30,6 +27,9 @@ async def ask(interaction: Interaction, question: str):
     if len(response) > 2000:
         response = response[:1997] + "..."
     await interaction.followup.send(response)
+
+# dev toggle for testing
+DEVELOPMENT = True
 
 @bot.event
 async def on_ready():
