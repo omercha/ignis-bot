@@ -46,3 +46,5 @@ async def on_ready():
 # runs code if the file is run directly
 if __name__ == "__main__":
     bot.run(TOKEN)
+
+# abcdefghijklmnopqrstuvwxyz
