@@ -1,4 +1,4 @@
-from discord import app_commands, Interaction
+from discord import Interaction
 
 def setup(bot):
     @bot.tree.command(name="hello", description="Say hi to Ignis")
