@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 import pathlib
+import importlib
 
 # Load environment variables such as the bot token and guild ID (for development)
 load_dotenv()
