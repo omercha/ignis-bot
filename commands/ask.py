@@ -23,15 +23,15 @@ def setup(bot):
         # Acknowledge the command to avoid timing out
         await interaction.response.defer()
 
-        # Call OpenAI with the last 10 messages
+        # Call OpenAI with context including the last 10 messages
         response = await ask_openai(conversation_history[user_id])
 
-        # Append assistant's reply to history
+        # Append Ignis' reply to history
         conversation_history[user_id].append({"role": "assistant", "content": response})
 
         # Ensure Discord message length limit
         if len(response) > 2000:
             response = response[:1997] + "..."
 
-        # Send the AI response as a follow-up
+        # Send the response back to the user
         await interaction.followup.send(response)
