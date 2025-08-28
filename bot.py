@@ -28,7 +28,7 @@ for file in commands_path.glob("*.py"):
         print(f"❌ Failed to load {module_name}: {e}")
 
 # Toggle between development and production
-DEVELOPMENT = True
+DEVELOPMENT = False
 
 # Sync commands on startup
 @bot.event
