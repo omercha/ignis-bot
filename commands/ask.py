@@ -5,7 +5,7 @@ from utils.openai_api import ask_openai
 conversation_history = {}
 
 def setup(bot):
-    @bot.tree.command(name="ask", description="Ask Ignis a question with context")
+    @bot.tree.command(name="ask", description="Ask Ignis a question")
     @app_commands.describe(question="Your question for Ignis")
     async def ask(interaction: Interaction, question: str):
         user_id = interaction.user.id
@@ -20,6 +20,9 @@ def setup(bot):
         # Store only the last 10 messages to manage token usage
         conversation_history[user_id] = conversation_history[user_id][-10:]
 
+        # Acknowledge the command to avoid timing out
+        await interaction.response.defer()
+
         # Call OpenAI with the last 10 messages
         response = await ask_openai(conversation_history[user_id])
 
@@ -30,4 +33,5 @@ def setup(bot):
         if len(response) > 2000:
             response = response[:1997] + "..."
 
-        await interaction.response.send_message(response)
+        # Send the AI response as a follow-up
+        await interaction.followup.send(response)
