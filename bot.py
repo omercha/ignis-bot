@@ -33,18 +33,32 @@ conversation_history = {}
 # async def test(interaction: discord.Interaction):
 #     await interaction.response.send_message("Commands have synced properly")
 
-# /hello
+# /help
 @bot.tree.command(
-        name="hello",
-        description="Say hi to Ignis"
+        name="help",
+        description="Get a list of available commands and their functions"
         )
-async def hello(interaction: discord.Interaction):
-    await interaction.response.send_message(f"👋 Hey! I’m Ignis, your AI study buddy. I can answer questions, explain concepts and more! Try /help to see what I can do.")
+async def help(interaction: discord.Interaction):
+    help_text = (
+        "List of currently available commands:\n"
+        "**/ask** [question] - *Ask Ignis a question and get a detailed response.*\n"
+        "**/reset** - *Reset your conversation history with Ignis.*\n"
+        "**/define** [term] - *Get a simple definition for a term or phrase.*\n"
+    )
+    await interaction.response.send_message(help_text)
+
+# # /hello
+# @bot.tree.command(
+#         name="hello",
+#         description="Say hi to Ignis"
+#         )
+# async def hello(interaction: discord.Interaction):
+#     await interaction.response.send_message(f"👋 Hey! I’m Ignis, your AI study buddy. I can answer questions, explain concepts and more! Try /help to see what I can do.")
 
 # /ask
 @bot.tree.command(
         name="ask",
-        description="Ask Ignis a question"
+        description="Ask Ignis a question and get a detailed response"
         )
 async def ask(interaction: discord.Interaction, question: str):
     user_id = interaction.user.id
@@ -89,7 +103,7 @@ async def define(interaction: discord.Interaction, term: str):
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
-    if DEVELOPMENT and guild:
+    if DEVELOPMENT:
         synced = await bot.tree.sync(guild=guild)
         print(f"Commands synced to guild {GUILD_ID}: {[cmd.name for cmd in synced]}")
     else:
