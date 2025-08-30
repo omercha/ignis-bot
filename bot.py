@@ -40,20 +40,17 @@ conversation_history = {}
         )
 async def help(interaction: discord.Interaction):
     help_text = (
-        "List of currently available commands:\n"
-        "**/ask** [question] - *Ask Ignis a question and get a detailed response.*\n"
-        "**/reset** - *Reset your conversation history with Ignis.*\n"
-        "**/define** [term] - *Get a simple definition for a term or phrase.*\n"
+        "__List of currently available commands:__\n"
+        "**/help** - Display this message.\n"
+        "**/ask** [question] - Ask Ignis a question and get a detailed response. Can store context for up to 10 responses.\n"
+        "**/reset** - Reset your conversation's context with Ignis.\n"
+        "**/define** [term] - Get a simple definition for a term or phrase.\n"
+        "**/explainlikeim5** [concept] - Get a significantly simplified explanation of a complex concept.\n"
+        "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
+        "**/translate** [text] [language] - Translate text into a specified language.\n"
+        "**/quiz** [topic] - Generate a short quiz on a specified topic.\n"
     )
     await interaction.response.send_message(help_text)
-
-# # /hello
-# @bot.tree.command(
-#         name="hello",
-#         description="Say hi to Ignis"
-#         )
-# async def hello(interaction: discord.Interaction):
-#     await interaction.response.send_message(f"👋 Hey! I’m Ignis, your AI study buddy. I can answer questions, explain concepts and more! Try /help to see what I can do.")
 
 # /ask
 @bot.tree.command(
@@ -77,7 +74,7 @@ async def ask(interaction: discord.Interaction, question: str):
 # /reset
 @bot.tree.command(
         name="reset",
-        description="Reset your conversation with Ignis"
+        description="Reset your conversation's context with Ignis"
         )
 async def reset(interaction: discord.Interaction):
     conversation_history[interaction.user.id] = []
