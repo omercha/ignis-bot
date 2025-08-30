@@ -17,7 +17,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # dev toggle (true when testing commands in a specific guild, false to deploy globally)
-DEVELOPMENT = False
+DEVELOPMENT = True
 guild = discord.Object(id=GUILD_ID) if DEVELOPMENT else None
 
 # global variable used to store conversation history (context)
@@ -25,15 +25,21 @@ conversation_history = {}
 
 # -------------------- COMMANDS --------------------
 
+# # /test (ensure development is set to True)
+# @bot.tree.command(
+#         name="test",
+#         description="Test command to check if commands are synced properly"
+# )
+# async def test(interaction: discord.Interaction):
+#     await interaction.response.send_message("Commands have synced properly")
+
 # /hello
 @bot.tree.command(
         name="hello",
         description="Say hi to Ignis"
         )
 async def hello(interaction: discord.Interaction):
-    await interaction.response.send_message(
-        f"👋 Hey! I’m Ignis, your AI study buddy. I can answer questions, explain concepts and more! Try /help to see what I can do."
-    )
+    await interaction.response.send_message(f"👋 Hey! I’m Ignis, your AI study buddy. I can answer questions, explain concepts and more! Try /help to see what I can do.")
 
 # /ask
 @bot.tree.command(
