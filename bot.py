@@ -32,7 +32,7 @@ conversation_history = {}
         )
 async def help(interaction: discord.Interaction):
     help_text = (
-        "__List of currently available commands:__\n"
+        "__List of currently available commands:__\n\n"
         "**/help** - Display this message.\n"
         "**/ask** [question] - Ask Ignis a question and get a detailed response. Can store context for up to 10 responses.\n"
         "**/reset** - Reset your conversation's context with Ignis.\n"
