@@ -25,18 +25,10 @@ conversation_history = {}
 
 # -------------------- COMMANDS --------------------
 
-# # /test (ensure development is set to True)
-# @bot.tree.command(
-#         name="test",
-#         description="Test command to check if commands are synced properly"
-# )
-# async def test(interaction: discord.Interaction):
-#     await interaction.response.send_message("Commands have synced properly")
-
 # /help
 @bot.tree.command(
         name="help",
-        description="Get a list of available commands and their functions"
+        description="List available commands"
         )
 async def help(interaction: discord.Interaction):
     help_text = (
@@ -55,7 +47,7 @@ async def help(interaction: discord.Interaction):
 # /ask
 @bot.tree.command(
         name="ask",
-        description="Ask Ignis a question and get a detailed response"
+        description="Ask Ignis a question"
         )
 async def ask(interaction: discord.Interaction, question: str):
     user_id = interaction.user.id
@@ -83,7 +75,7 @@ async def reset(interaction: discord.Interaction):
 # /define
 @bot.tree.command(
         name="define",
-        description="Get a simple definition for a term or phrase"
+        description="Define a term or phrase"
         )
 async def define(interaction: discord.Interaction, term: str):
     await interaction.response.defer()
@@ -93,6 +85,14 @@ async def define(interaction: discord.Interaction, term: str):
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
+
+# # /test (ensure development is set to True)
+# @bot.tree.command(
+#         name="test",
+#         description="Test command to check if commands are synced properly"
+# )
+# async def test(interaction: discord.Interaction):
+#     await interaction.response.send_message("Commands have synced properly")
 
 # -------------------- STARTUP --------------------
 
