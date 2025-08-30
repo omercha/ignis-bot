@@ -74,11 +74,11 @@ async def ask(interaction: discord.Interaction, question: str):
 # /reset
 @bot.tree.command(
         name="reset",
-        description="Reset your conversation's context with Ignis"
+        description="Reset conversation context"
         )
 async def reset(interaction: discord.Interaction):
     conversation_history[interaction.user.id] = []
-    await interaction.response.send_message("✅ Your conversation has been reset.")
+    await interaction.response.send_message("Your conversation has been reset ✅")
 
 # /define
 @bot.tree.command(
@@ -96,10 +96,16 @@ async def define(interaction: discord.Interaction, term: str):
 
 # -------------------- STARTUP --------------------
 
-# necessary on_ready event
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
+
+    # configure bot presence
+    await bot.change_presence(
+        status=discord.Status.online,
+        activity=discord.Game(name="Type /help for usage!")
+    )
+    
     if DEVELOPMENT:
         synced = await bot.tree.sync(guild=guild)
         print(f"Commands synced to guild {GUILD_ID}: {[cmd.name for cmd in synced]}")
@@ -107,7 +113,6 @@ async def on_ready():
         synced = await bot.tree.sync()
         print(f"Global commands synced: {[cmd.name for cmd in synced]}")
 
-# main function to run the bot
 async def main():
     async with bot:
         await bot.start(TOKEN)
