@@ -41,7 +41,7 @@ async def help(interaction: discord.Interaction):
         "**/explainlikeim5** [concept] - Breaks down a complex concept into simple terms.\n"
         "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
         "**/translate** [text] [language] - Translate text into a specified language.\n"
-        "**/quiz** [topic] [num_questions] - Generate a short quiz on a specified topic with a custom number of questions.\n"
+        "**/quiz** [topic] [num_questions] - Generate a short quiz on a specified topic with up to 20 questions.\n"
     )
     await interaction.response.send_message(help_text)
 
@@ -60,9 +60,12 @@ async def ask(interaction: discord.Interaction, question: str):
     await interaction.response.defer()
     response = await ask_openai(conversation_history[user_id])
     conversation_history[user_id].append({"role": "assistant", "content": response})
+
     if len(response) > 2000:
         response = response[:1997] + "..."
-    await interaction.followup.send(response)
+    
+    reply = f"{interaction.user.mention} asked Ignis: {question}\n\n{response}"
+    await interaction.followup.send(reply)
 
 # /reset
 @bot.tree.command(
@@ -93,7 +96,10 @@ async def define(interaction: discord.Interaction, term: str):
         }
     ]
     response = await ask_openai(messages)
-    await interaction.followup.send(response)
+    if len(response) > 2000:
+        response = response[:1997] + "..."
+    reply = f"{interaction.user.mention} requested a definition for: {term}\n\n{response}"
+    await interaction.followup.send(reply)
 
 # /explainlikeim5
 @bot.tree.command(
@@ -114,7 +120,10 @@ async def explainlikeim5(interaction: discord.Interaction, concept: str):
         }
     ]
     response = await ask_openai(messages)
-    await interaction.followup.send(response)
+    if len(response) > 2000:
+        response = response[:1997] + "..."
+    reply = f"{interaction.user.mention} asked Ignis to explain: {concept}\n\n{response}"
+    await interaction.followup.send(reply)
 
 # /summarise
 @bot.tree.command(
@@ -135,7 +144,10 @@ async def summarise(interaction: discord.Interaction, text: str):
         }
     ]
     response = await ask_openai(messages)
-    await interaction.followup.send(response)
+    if len(response) > 2000:
+        response = response[:1997] + "..."
+    reply = f"{interaction.user.mention} asked Ignis to summarise:\n{text}\n\n{response}"
+    await interaction.followup.send(reply)
 
 # /translate
 @bot.tree.command(
@@ -156,7 +168,10 @@ async def translate(interaction: discord.Interaction, text: str, language: str):
         }
     ]
     response = await ask_openai(messages)
-    await interaction.followup.send(response)
+    if len(response) > 2000:
+        response = response[:1997] + "..."
+    reply = f"{interaction.user.mention} asked Ignis to translate to {language}:\n{text}\n\n{response}"
+    await interaction.followup.send(reply)
 
 # /quiz
 @bot.tree.command(
@@ -171,7 +186,7 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
             "content": (
                 "You are a helpful study assistant. "
                 "When generating quiz questions, follow these rules:\n"
-                "1. Provide exactly the number of questions requested.\n"
+                "1. Provide the number of questions requested, but never more than 20. If the user requests more than 20, return 20 questions and clearly state at the start that 20 is the maximum.\n"
                 "2. Each question should be numbered and bolded.\n"
                 "3. Each answer should appear immediately below its question, "
                 "not numbered, and wrapped in double pipes ||like this|| to spoiler it for Discord.\n"
@@ -186,7 +201,10 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
     ]
     await interaction.response.defer()
     response = await ask_openai(messages)
-    await interaction.followup.send(response)
+    if len(response) > 2000:
+        response = response[:1997] + "..."
+    reply = f"{interaction.user.mention} requested a {num_questions}-question quiz on {topic}:\n\n{response}"
+    await interaction.followup.send(reply)
 
 # # /test (ensure development is set to True)
 # @bot.tree.command(
