@@ -144,11 +144,20 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
     messages = [
         {
             "role": "system",
-            "content": "You are a helpful study assistant that provides a specified number of quiz questions on a specified topic, along with their answers wrapped in || each side of the answer, spoilering them for Discord."
+            "content": (
+                "You are a helpful study assistant. "
+                "When generating quiz questions, follow these rules:\n"
+                "1. Provide exactly the number of questions requested.\n"
+                "2. Each question should be numbered and bolded.\n"
+                "3. Each answer should appear immediately below its question, "
+                "not numbered, and wrapped in double pipes ||like this|| to spoiler it for Discord.\n"
+                "4. Do not bold the answers.\n"
+                "5. Format the response clearly so that each question and answer is on its own line."
+            )
         },
         {
             "role": "user",
-            "content": f"Provide {num_questions} quiz questions on {topic}"
+            "content": f"Please provide {num_questions} quiz questions on the topic: {topic}"
         }
     ]
     await interaction.response.defer()
