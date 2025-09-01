@@ -17,7 +17,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # dev toggle (true when testing commands in a specific guild, false to deploy globally)
-DEVELOPMENT = True
+DEVELOPMENT = False
 guild = discord.Object(id=GUILD_ID) if DEVELOPMENT else None
 
 # global variable used to store conversation history (context)
