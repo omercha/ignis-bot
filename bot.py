@@ -119,6 +119,21 @@ async def summarise(interaction: discord.Interaction, text: str):
     response = await ask_openai(messages)
     await interaction.followup.send(response)
 
+# /translate
+@bot.tree.command(
+        name="translate",
+        description="Translate text into a specified language",
+        guild=guild
+)
+async def translate(interaction: discord.Interaction, text: str, language: str):
+    await interaction.response.defer()
+    messages = [
+        {"role": "system", "content": "You are a helpful study assistant that translates text into a different language."},
+        {"role": "user", "content": f"Translate the following text into {language}: {text}"}
+    ]
+    response = await ask_openai(messages)
+    await interaction.followup.send(response)
+    
 # # /test (ensure development is set to True)
 # @bot.tree.command(
 #         name="test",
@@ -142,7 +157,7 @@ async def on_ready():
     
     # synchronise commands (either to a specific guild or globally)
     if DEVELOPMENT:
-        synced = await bot.tree.sync(guild=guild, delete_missing = True)
+        synced = await bot.tree.sync(guild=guild)
         print(f"Commands synced to guild {GUILD_ID}: {[cmd.name for cmd in synced]}")
     else:
         synced = await bot.tree.sync()
