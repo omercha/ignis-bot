@@ -53,7 +53,6 @@ async def ask(interaction: discord.Interaction, question: str):
     user_id = interaction.user.id
     if user_id not in conversation_history:
         conversation_history[user_id] = []
-
     conversation_history[user_id].append({"role": "user", "content": question})
     conversation_history[user_id] = conversation_history[user_id][-10:]
     await interaction.response.defer()
@@ -96,6 +95,20 @@ async def explainlikeim5(interaction: discord.Interaction, concept: str):
     messages = [
         {"role": "system", "content": "You are a helpful study assistant that explains complex concepts in simple terms."},
         {"role": "user", "content": f"Explain like I'm 5 years old: {concept}"}
+    ]
+    response = await ask_openai(messages)
+    await interaction.followup.send(response)
+
+# /summarise
+@bot.tree.command(
+        name="summarise",
+        description="Summarise a long piece of text"
+)
+async def summarise(interaction: discord.Interaction, text: str):
+    await interaction.response.defer()
+    messages = [
+        {"role": "system", "content": "You are a helpful study assistant that converts long pieces of text into concise summaries."},
+        {"role": "user", "content": f"Summarise the following text: {text}"}
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
