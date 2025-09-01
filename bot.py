@@ -28,7 +28,8 @@ conversation_history = {}
 # /help
 @bot.tree.command(
         name="help",
-        description="List available commands"
+        description="List available commands",
+        guild=guild
         )
 async def help(interaction: discord.Interaction):
     help_text = (
@@ -47,7 +48,8 @@ async def help(interaction: discord.Interaction):
 # /ask
 @bot.tree.command(
         name="ask",
-        description="Ask Ignis a question"
+        description="Ask Ignis a question",
+        guild=guild
         )
 async def ask(interaction: discord.Interaction, question: str):
     user_id = interaction.user.id
@@ -65,7 +67,8 @@ async def ask(interaction: discord.Interaction, question: str):
 # /reset
 @bot.tree.command(
         name="reset",
-        description="Reset conversation context"
+        description="Reset conversation context",
+        guild=guild
         )
 async def reset(interaction: discord.Interaction):
     conversation_history[interaction.user.id] = []
@@ -74,7 +77,8 @@ async def reset(interaction: discord.Interaction):
 # /define
 @bot.tree.command(
         name="define",
-        description="Define a term or phrase"
+        description="Define a term or phrase",
+        guild=guild
         )
 async def define(interaction: discord.Interaction, term: str):
     await interaction.response.defer()
@@ -88,7 +92,8 @@ async def define(interaction: discord.Interaction, term: str):
 # /explainlikeim5
 @bot.tree.command(
         name="explainlikeim5",
-        description="Explain a complex concept in simple terms"
+        description="Explain a complex concept in simple terms",
+        guild=guild
         )
 async def explainlikeim5(interaction: discord.Interaction, concept: str):
     await interaction.response.defer()
@@ -102,7 +107,8 @@ async def explainlikeim5(interaction: discord.Interaction, concept: str):
 # /summarise
 @bot.tree.command(
         name="summarise",
-        description="Summarise a long piece of text"
+        description="Summarise a long piece of text",
+        guild=guild
 )
 async def summarise(interaction: discord.Interaction, text: str):
     await interaction.response.defer()
@@ -116,7 +122,8 @@ async def summarise(interaction: discord.Interaction, text: str):
 # # /test (ensure development is set to True)
 # @bot.tree.command(
 #         name="test",
-#         description="Test command to check if commands are synced properly"
+#         description="Test command to check if commands are synced properly",
+#         guild=guild
 # )
 # async def test(interaction: discord.Interaction):
 #     await interaction.response.send_message("Commands have synced properly")
@@ -133,8 +140,9 @@ async def on_ready():
         activity=discord.Game(name="Type /help for usage!")
     )
     
+    # synchronise commands (either to a specific guild or globally)
     if DEVELOPMENT:
-        synced = await bot.tree.sync(guild=guild)
+        synced = await bot.tree.sync(guild=guild, delete_missing = True)
         print(f"Commands synced to guild {GUILD_ID}: {[cmd.name for cmd in synced]}")
     else:
         synced = await bot.tree.sync()
