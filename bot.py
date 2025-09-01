@@ -86,6 +86,20 @@ async def define(interaction: discord.Interaction, term: str):
     response = await ask_openai(messages)
     await interaction.followup.send(response)
 
+# /explainlikeim5
+@bot.tree.command(
+        name="explainlikeim5",
+        description="Explain a complex concept in simple terms"
+        )
+async def explainlikeim5(interaction: discord.Interaction, concept: str):
+    await interaction.response.defer()
+    messages = [
+        {"role": "system", "content": "You are a helpful study assistant that explains complex concepts in simple terms."},
+        {"role": "user", "content": f"Explain like I'm 5 years old: {concept}"}
+    ]
+    response = await ask_openai(messages)
+    await interaction.followup.send(response)
+
 # # /test (ensure development is set to True)
 # @bot.tree.command(
 #         name="test",
