@@ -41,7 +41,7 @@ async def help(interaction: discord.Interaction):
         "**/explainlikeim5** [concept] - Breaks down a complex concept into simple terms.\n"
         "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
         "**/translate** [text] [language] - Translate text into a specified language.\n"
-        "**/quiz** [topic] [num_questions] - Generate a short quiz on a specified topic with up to 20 questions.\n"
+        "**/quiz** [topic] [num_questions] - Generate a short quiz on a specified topic with up to 10 questions.\n"
     )
     await interaction.response.send_message(help_text)
 
@@ -186,7 +186,7 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
             "content": (
                 "You are a helpful study assistant. "
                 "When generating quiz questions, follow these rules:\n"
-                "1. Provide the number of questions requested, but never more than 20. If the user requests more than 20, return 20 questions and clearly state at the start that 20 is the maximum.\n"
+                "1. Provide the number of questions requested, but never more than 10. If the user requests more than 10, return 10 questions and clearly state at the start that 10 is the maximum.\n"
                 "2. Each question should be numbered and bolded.\n"
                 "3. Each answer should appear immediately below its question, "
                 "not numbered, and wrapped in double pipes ||like this|| to spoiler it for Discord.\n"
