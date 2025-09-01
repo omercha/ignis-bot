@@ -133,7 +133,28 @@ async def translate(interaction: discord.Interaction, text: str, language: str):
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
-    
+
+    # /quiz
+@bot.tree.command(
+    name="quiz",
+    description="Generate a short quiz on a specified topic",
+    guild=guild
+)
+async def quiz(interaction: discord.Interaction, topic: str, num_questions: int):
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful study assistant that provides a specified number of quiz questions on a specified topic, along with their answers wrapped in || each side of the answer, spoilering them for Discord."
+        },
+        {
+            "role": "user",
+            "content": f"Provide {num_questions} quiz questions on {topic}"
+        }
+    ]
+    await interaction.response.defer()
+    response = await ask_openai(messages)
+    await interaction.followup.send(response)
+
 # # /test (ensure development is set to True)
 # @bot.tree.command(
 #         name="test",
