@@ -37,7 +37,7 @@ async def help(interaction: discord.Interaction):
         "**/ask** [question] - Ask Ignis a question and get a detailed response. Can store context for up to 10 responses.\n"
         "**/reset** - Reset your conversation's context with Ignis.\n"
         "**/define** [term] - Get a simple definition for a term or phrase.\n"
-        "**/explainlikeim5** [concept] - Get a significantly simplified explanation of a complex concept.\n"
+        "**/explainlikeim5** [concept] - Breaks down a complex concept into simple terms.\n"
         "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
         "**/translate** [text] [language] - Translate text into a specified language.\n"
         "**/quiz** [topic] - Generate a short quiz on a specified topic.\n"
