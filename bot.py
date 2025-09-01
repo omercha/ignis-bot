@@ -83,8 +83,14 @@ async def reset(interaction: discord.Interaction):
 async def define(interaction: discord.Interaction, term: str):
     await interaction.response.defer()
     messages = [
-        {"role": "system", "content": "You are a helpful study assistant that provides short, simple definitions."},
-        {"role": "user", "content": f"Define: {term}"}
+        {
+            "role": "system", "content":
+            "You are a helpful study assistant that provides short, simple definitions."
+        },
+        {
+            "role": "user",
+            "content": f"Define: {term}"
+        }
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
@@ -98,8 +104,14 @@ async def define(interaction: discord.Interaction, term: str):
 async def explainlikeim5(interaction: discord.Interaction, concept: str):
     await interaction.response.defer()
     messages = [
-        {"role": "system", "content": "You are a helpful study assistant that explains complex concepts in simple terms."},
-        {"role": "user", "content": f"Explain like I'm 5 years old: {concept}"}
+        {
+            "role": "system", 
+            "content": "You are a helpful study assistant that explains complex concepts in simple terms."
+        },
+        {
+            "role": "user",
+            "content": f"Explain like I'm 5 years old: {concept}"
+        }
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
@@ -113,8 +125,14 @@ async def explainlikeim5(interaction: discord.Interaction, concept: str):
 async def summarise(interaction: discord.Interaction, text: str):
     await interaction.response.defer()
     messages = [
-        {"role": "system", "content": "You are a helpful study assistant that converts long pieces of text into concise summaries."},
-        {"role": "user", "content": f"Summarise the following text: {text}"}
+        {
+            "role": "system",
+            "content": "You are a helpful study assistant that converts long pieces of text into concise summaries."
+        },
+        {
+            "role": "user",
+            "content": f"Summarise the following text: {text}"
+        }
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
@@ -128,8 +146,14 @@ async def summarise(interaction: discord.Interaction, text: str):
 async def translate(interaction: discord.Interaction, text: str, language: str):
     await interaction.response.defer()
     messages = [
-        {"role": "system", "content": "You are a helpful study assistant that translates text into a different language."},
-        {"role": "user", "content": f"Translate the following text into {language}: {text}"}
+        {
+            "role": "system",
+            "content": "You are a helpful study assistant that translates text into a different language."
+        },
+        {
+            "role": "user",
+            "content": f"Translate the following text into {language}: {text}"
+        }
     ]
     response = await ask_openai(messages)
     await interaction.followup.send(response)
