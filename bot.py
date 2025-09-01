@@ -41,7 +41,7 @@ async def help(interaction: discord.Interaction):
         "**/explainlikeim5** [concept] - Breaks down a complex concept into simple terms.\n"
         "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
         "**/translate** [text] [language] - Translate text into a specified language.\n"
-        "**/quiz** [topic] - Generate a short quiz on a specified topic.\n"
+        "**/quiz** [topic] [num_questions] - Generate a short quiz on a specified topic with a custom number of questions.\n"
     )
     await interaction.response.send_message(help_text)
 
@@ -158,7 +158,7 @@ async def translate(interaction: discord.Interaction, text: str, language: str):
     response = await ask_openai(messages)
     await interaction.followup.send(response)
 
-    # /quiz
+# /quiz
 @bot.tree.command(
     name="quiz",
     description="Generate a short quiz on a specified topic",
