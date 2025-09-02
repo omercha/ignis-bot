@@ -15,7 +15,6 @@
 Ignis is a Discord bot powered by the OpenAI API that helps you **study smarter**.  
 It can help you understand tough concepts, provide a quick definition, or even test you with a quiz!
 
-
 ---
 
 ## ✨ Commands
@@ -33,3 +32,24 @@ Ignis comes with a variety of commands designed to make learning easier and more
 
 ---
 
+## 🛠️ Installation
+
+To start using Ignis, simply [**invite the bot to your Discord server**](YOUR_INVITE_LINK_HERE).  
+
+Once Ignis joins your server, type `/help` to see available commands!  
+
+---
+
+## 🐞 Known Issues & Bugs
+
+- `/quiz` may get stuck in a loading state if an invalid topic is chosen.  
+- Very large inputs for `/summarise` or `/translate` can hit Discord's character limit.  
+
+If you encounter any other bugs, feel free to reach out!
+
+## 🌱 Contributions & Help
+
+Contributions of all kinds are welcome! Fork the repo or submit a pull request to help improve Ignis.  
+
+Have an idea for a new feature, want to report a bug, or just want to say hi?  
+Reach out to me on **Discord: `omer_c`**.
