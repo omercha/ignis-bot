@@ -8,14 +8,10 @@
   <img src="https://img.shields.io/badge/license-MIT-green">
 </p>
 
----
-
 ## 📖 About
 
 Ignis is a Discord bot powered by the OpenAI API that helps you **study smarter**.  
 It can help you understand tough concepts, provide a quick definition, or even test you with a quiz!
-
----
 
 ## ✨ Commands
 
@@ -30,15 +26,11 @@ Ignis comes with a variety of commands designed to make learning easier and more
 - `/translate [text] [language]` → Translate text into another language.  
 - `/quiz [topic] [num_questions]` → Generate a short quiz (up to 10 questions) on a chosen topic.  
 
----
-
 ## 🛠️ Installation
 
 To start using Ignis, simply [**invite the bot to your Discord server**](YOUR_INVITE_LINK_HERE).  
 
 Once Ignis joins your server, type `/help` to see available commands!  
-
----
 
 ## 🐞 Known Issues & Bugs
 
