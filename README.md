@@ -37,9 +37,8 @@ Ignis comes with a variety of commands designed to make learning easier and more
 - `/quiz` may get stuck in a loading state if an invalid topic is chosen.  
 - Very large inputs for `/summarise` or `/translate` can hit Discord's character limit.  
 
-If you encounter any other bugs, feel free to reach out!
+
 
 ## 🌱 Contributions
 
-Want to report a bug, suggest an improvement or say hello?
-Reach out to me on **Discord: `omer_c`**.
+If you encounter any bugs, have suggestions to help improve Ignis or just want to say hello, feel free to reach out to me on **Discord: `omer_c`**!
