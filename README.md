@@ -15,7 +15,7 @@ It can help you understand tough concepts, provide a quick definition, or even t
 
 ## 🛠️ Installation
 
-To start using Ignis, simply [**invite the bot to your Discord server**](YOUR_INVITE_LINK_HERE).  
+To start using Ignis, simply [**invite the bot to your Discord server**](https://discord.com/oauth2/authorize?client_id=1408938767489695826).  
 
 Once Ignis joins your server, type `/help` to see available commands!  
 
