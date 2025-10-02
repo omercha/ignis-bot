@@ -3,24 +3,39 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from utils.openai_api import ask_openai
+import redis
+import json
 
-# load environment variables
-load_dotenv()
+load_dotenv() # load environment variables
 TOKEN = os.getenv("DISCORD_TOKEN")
 GUILD_ID = int(os.getenv("GUILD_ID", 0))
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", None)
 
-# bot initialisation
+# bot setup
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# dev toggle (true when testing commands in a specific guild, false to deploy globally)
+# redis client setup
+try:
+    r = redis.Redis(
+        host=REDIS_HOST,
+        port=REDIS_PORT,
+        password=REDIS_PASSWORD,
+        ssl=True,
+        decode_responses=True
+    )
+    if r.ping():
+        print("Connected to Redis")
+except redis.ConnectionError:
+    print("Failed to connect to Redis")
+    exit()
+
+# dev toggle (true when testing commands in a specific guild or false when deploying globally)
 DEVELOPMENT = False
 guild = discord.Object(id=GUILD_ID) if DEVELOPMENT else None
-
-# global variable used to store context
-conversation_history = {}
-
 
 # --- COMMANDS ---
 # /help
@@ -33,8 +48,8 @@ async def help(interaction: discord.Interaction):
     help_text = (
         "__List of currently available commands:__\n\n"
         "**/help** - Display this message.\n"
-        "**/ask** [question] - Ask Ignis a question and get a detailed response. Can store context for up to 10 responses.\n"
-        "**/reset** - Reset your conversation's context with Ignis.\n"
+        "**/ask** [question] - Ask Ignis a question and get a detailed response. Stores context of the last 5 responses and removes the earliest response if the limit is reached.\n"
+        "**/reset** - Reset your conversation history with Ignis.\n"
         "**/define** [term] - Get a simple definition for a term or phrase.\n"
         "**/explainlikeim5** [concept] - Breaks down a complex concept into simple terms.\n"
         "**/summarise** [text] - Transform a long piece of text into a concise summary.\n"
@@ -43,7 +58,7 @@ async def help(interaction: discord.Interaction):
     )
     await interaction.response.send_message(help_text)
 
-# /ask
+# /ask (uses redis to store conversation history)
 @bot.tree.command(
         name="ask",
         description="Ask Ignis a question",
@@ -51,16 +66,21 @@ async def help(interaction: discord.Interaction):
         )
 async def ask(interaction: discord.Interaction, question: str):
     user_id = interaction.user.id
-    if user_id not in conversation_history:
-        conversation_history[user_id] = []
-    conversation_history[user_id].append({"role": "user", "content": question})
-    conversation_history[user_id] = conversation_history[user_id][-10:]
+    
+    redis_key = f"conversation_history:{user_id}"
+    user_message = {"role": "user", "content": question}
+    r.rpush(redis_key, json.dumps(user_message))
+    r.ltrim(redis_key, -10, -1)
     await interaction.response.defer()
-    response = await ask_openai(conversation_history[user_id])
-    conversation_history[user_id].append({"role": "assistant", "content": response})
+    history_json = r.lrange(redis_key, 0, -1)
+    messages = [json.loads(message) for message in history_json]
+    response = await ask_openai(messages)
+    assistant_message = {"role": "assistant", "content": response}
+    r.rpush(redis_key, json.dumps(assistant_message))
+    r.ltrim(redis_key, -10, -1)
 
     if len(response) > 2000:
-        response = response[:1997] + "..."
+        response = response[:1900] + "... \n\n*Response truncated due to length.*"
     
     reply = f"{interaction.user.mention} asked Ignis: {question}\n\n{response}"
     await interaction.followup.send(reply)
@@ -72,8 +92,9 @@ async def ask(interaction: discord.Interaction, question: str):
         guild=guild
         )
 async def reset(interaction: discord.Interaction):
-    conversation_history[interaction.user.id] = []
-    await interaction.response.send_message("Your conversation has been reset ✅")
+    redis_key = f"conversation_history:{interaction.user.id}"
+    r.delete(redis_key)
+    await interaction.response.send_message("Your conversation history has been reset ✅")
 
 # /define
 @bot.tree.command(
@@ -95,7 +116,7 @@ async def define(interaction: discord.Interaction, term: str):
     ]
     response = await ask_openai(messages)
     if len(response) > 2000:
-        response = response[:1997] + "..."
+        response = response[:1900] + "... \n\n*Response truncated due to length.*"
     reply = f"{interaction.user.mention} requested a definition for: {term}\n\n{response}"
     await interaction.followup.send(reply)
 
@@ -120,7 +141,7 @@ async def explainlikeim5(interaction: discord.Interaction, concept: str):
     response = await ask_openai(messages)
     if len(response) > 2000:
         response = response[:1997] + "..."
-    reply = f"{interaction.user.mention} asked Ignis to explain: {concept}\n\n{response}"
+    reply = f"{interaction.user.mention} used /explainlikeim5 to explain: {concept}\n\n{response}"
     await interaction.followup.send(reply)
 
 # /summarise
@@ -143,8 +164,8 @@ async def summarise(interaction: discord.Interaction, text: str):
     ]
     response = await ask_openai(messages)
     if len(response) > 2000:
-        response = response[:1997] + "..."
-    reply = f"{interaction.user.mention} asked Ignis to summarise:\n{text}\n\n{response}"
+        response = response[:1900] + "... \n\n*Response truncated due to length.*"
+    reply = f"{interaction.user.mention} here is a summary on your topic:\n\n{response}"
     await interaction.followup.send(reply)
 
 # /translate
@@ -167,8 +188,8 @@ async def translate(interaction: discord.Interaction, text: str, language: str):
     ]
     response = await ask_openai(messages)
     if len(response) > 2000:
-        response = response[:1997] + "..."
-    reply = f"{interaction.user.mention} asked Ignis to translate to {language}:\n{text}\n\n{response}"
+        response = response[:1900] + "... \n\n*Response truncated due to length.*"
+    reply = f"{interaction.user.mention} here is your text translated to {language}:\n\n{response}"
     await interaction.followup.send(reply)
 
 # /quiz
@@ -184,12 +205,12 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
             "content": (
                 "You are a helpful study assistant. "
                 "When generating quiz questions, follow these rules:\n"
-                "1. Provide the number of questions requested, but never more than 10. If the user requests more than 10, return 10 questions and clearly state at the start that 10 is the maximum.\n"
+                "1. Provide the number of questions requested, but never more than 10. If the user requests more than 10, state that 10 is the maximum and prompt the user to try running /quiz again.\n"
                 "2. Each question should be numbered and bolded.\n"
                 "3. Each answer should appear immediately below its question, "
-                "not numbered, and wrapped in double pipes ||like this|| to spoiler it for Discord.\n"
-                "4. Do not bold the answers.\n"
-                "5. Format the response clearly so that each question and answer is on its own line."
+                "not numbered or bolded, and wrapped in double pipes ||like this|| to spoiler it for Discord.\n"
+                "4. Format the response clearly so that each question and answer is on its own line."
+                "5. If an invalid quiz topic is provided, respond with a message indicating that the topic is invalid and prompt the user to try running /quiz again."
             )
         },
         {
@@ -200,22 +221,21 @@ async def quiz(interaction: discord.Interaction, topic: str, num_questions: int)
     await interaction.response.defer()
     response = await ask_openai(messages)
     if len(response) > 2000:
-        response = response[:1997] + "..."
-    reply = f"{interaction.user.mention} requested a {num_questions}-question quiz on {topic}:\n\n{response}"
+        response = response[:1900] + "... \n\n*Response truncated due to length.*"
+    reply = f"{interaction.user.mention} here is a {num_questions} quiz on {topic}:\n\n{response}"
     await interaction.followup.send(reply)
-# ----------------
 
-# startup event
+# startup actions
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
 
-    # configure bot presence
+    # configure discord presence
     await bot.change_presence(
         status=discord.Status.online,
         activity=discord.Game(name="Type /help for usage!")
     )
-    
+
     # synchronise commands (either to a specific guild or globally)
     if DEVELOPMENT:
         synced = await bot.tree.sync(guild=guild)
@@ -224,6 +244,7 @@ async def on_ready():
         synced = await bot.tree.sync()
         print(f"Global commands synced: {[cmd.name for cmd in synced]}")
 
+# start the bot
 async def main():
     async with bot:
         await bot.start(TOKEN)
