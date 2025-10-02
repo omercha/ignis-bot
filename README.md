@@ -24,7 +24,7 @@ Once Ignis joins your server, type `/help` to see available commands!
 Ignis comes with a variety of commands designed to make learning easier and more interactive:
 
 - `/help` → Display all available commands.  
-- `/ask [question]` → Ask Ignis any question and get a detailed response. (Stores context for up to 10 responses)  
+- `/ask [question]` → Ask Ignis any question and get a detailed response. Stores context for the last 5 responses and removes the earliest response if the limit is reached.  
 - `/reset` → Reset your current conversation with Ignis.  
 - `/define [term]` → Get a simple, clear definition for a term or phrase.  
 - `/explainlikeim5 [concept]` → Break down complex topics into easy-to-understand explanations.  
