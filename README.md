@@ -30,14 +30,7 @@ Ignis comes with a variety of commands designed to make learning easier and more
 - `/explainlikeim5 [concept]` → Break down complex topics into easy-to-understand explanations.  
 - `/summarise [text]` → Turn long text into a short, concise summary.  
 - `/translate [text] [language]` → Translate text into another language.  
-- `/quiz [topic] [num_questions]` → Generate a short quiz (up to 10 questions) on a chosen topic.  
-
-## Known Issues & Bugs
-
-- `/quiz` may get stuck in a loading state if an invalid topic is chosen.  
-- Very large inputs for `/summarise` or `/translate` can hit Discord's character limit.  
-
-
+- `/quiz [topic] [num_questions]` → Generate a short quiz (up to 10 questions) on a chosen topic.   
 
 ## Contributions
 
